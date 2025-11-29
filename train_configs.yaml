@@ -1,0 +1,18 @@
+num_epochs: 500
+batch_size: 64
+n_folds: 10
+patience: 50
+lr: 0.001
+stop_early: True
+save_path: 'scaled/multi'
+SEED: 42
+props: ['pCMC', 'AW_ST_CMC', 'Area_min']
+scaling: True
+tuning: True
+in_channels: 39
+edge_dim: 11
+hidden_channels: 64
+out_channels: 128
+num_layers: 2
+num_timesteps: 2
+dropout: 0.1
