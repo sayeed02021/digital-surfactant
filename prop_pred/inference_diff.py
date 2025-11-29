@@ -169,8 +169,7 @@ def inference_for_one_file(file_path, idx):
     ensemble_results.to_csv(f'{save_path}/pred_molecules_{idx}.csv', index=False)
 
         
-        # for key,val in all_data.items():
-        #     print(len(val))
+
 
 
 
