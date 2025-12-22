@@ -2,12 +2,15 @@
 
 ## Setting up Environment
 After setting up [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install) execute the following steps: 
-1. Create new conda environment
-```python
+1. Create new conda environment and activate it:
+```bash
 conda create -n torch_mol python=3.11
+
+conda activate torch_mol
 ```
-2. Install required libraries
-```python
+
+2. Install required libraries:
+```bash
 pip install -r requirements.txt
 ```
 
