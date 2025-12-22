@@ -10,7 +10,7 @@ import os
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_path', type=str, default='models/model_pCMC.pth')
+    parser.add_argument('--model_path', type=str, default='models/model_pCMC_AW_ST_CMC_Area_min.pth')
     parser.add_argument('--n_gen', type=int, default=10)
     parser.add_argument('--props',nargs='+',type=str,default=['pCMC', 'AW_ST_CMC', 'Area_min'])
     parser.add_argument('--save_folder', type=str, default='../generated_data')
@@ -53,7 +53,7 @@ def main():
         if len(args.props)==1:
             data_df.to_csv(f'{args.save_folder}/generated_single_10_mol_per_prop.csv', index=False)
         else:
-            data_df.to_csv(f'{args.save_folder}/generated_multi_10_mol_per_prop_scaled.csv', index=False)
+            data_df.to_csv(f'{args.save_folder}/generated_multi_10_mol_per_prop.csv', index=False)
 
         torch.cuda.empty_cache()
 

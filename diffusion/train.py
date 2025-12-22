@@ -10,30 +10,48 @@ import os
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--props',nargs='+',type=str,default=['pCMC', 'AW_ST_CMC', 'Area_min'])
-    parser.add_argument('--df_path', type=str, default='../data/surfpro_imputed_non_ionic.csv')
-    parser.add_argument('--save_folder', type=str, default='models')
-    parser.add_argument('--batch_size', type=int, default=20)
-    parser.add_argument('--n_epoch', type=int, default=10000)
+    parser.add_argument('--props',nargs='+',type=str,default=['pCMC', 'AW_ST_CMC', 'Area_min'], help='Properties to condition the model')
+    parser.add_argument('--df_path', type=str, default='../data/surfpro_imputed_non_ionic.csv', help='Path to SurfPro .csv data file')
+    parser.add_argument('--save_folder', type=str, default='models', help='Path to folder where trained models are saved')
+    parser.add_argument('--batch_size', type=int, default=20, help='Batch size for training')
+    parser.add_argument('--n_epoch', type=int, default=10000, help='Total number of epochs the model is trained for')
 
     return parser.parse_args()
 
 
 def get_y(df, args):
     df = df.dropna(subset=args.props).reset_index(drop=True)
-    df.loc[:, 'Gamma_max'] = df.loc[:,'Gamma_max']*1e6
-    
+    if 'Gamma_max' in df.columns:
+        df.loc[:, 'Gamma_max'] = df.loc[:,'Gamma_max']*1e6
+    for prop in args.props:
+        if prop not in df.columns:
+            raise ValueError(
+                f'Column name {prop} not found in csv file'
+            )
     y_final = [df[prop].to_numpy()[:, None] for prop in args.props]
     y = np.concatenate(y_final, axis=-1)
     # print(y.shape)
+    
+    if 'SMILES' in df.columns:
 
-    X = df['SMILES'].to_numpy()
+        X = df['SMILES'].to_numpy()
+    elif 'smiles' in df.columns:
+        X = df['smiles'].to_numpy()
+    else:
+        raise ValueError(
+            'Smiles column name should be either SMILES or smiles'
+        )
     return X,y
     
 def get_data(args):
     print(args.df_path)
     df = pd.read_csv(args.df_path)
-    
+    columns = np.array(df.columns)
+    if 'fold' not in columns:
+        raise ValueError(
+            'csv does not have column fold. ' \
+            'Include train and test smiles together in same file, and test smiles should have fold value -1'
+        )
     df_train = df[df['fold']!=-1]
     X_train,y_train = get_y(df_train, args)
     
@@ -43,10 +61,6 @@ def get_data(args):
 
     X_train_all = X_train
     y_train_all = y_train
-
-    
-
-    
 
     print(f'Train: {X_train_all.shape}, {y_train_all.shape}')
     print(f'Test: {X_test.shape}, {y_test.shape}')
@@ -61,7 +75,7 @@ def get_model(args):
     
     model = torch_molecule.generator.graph_dit.GraphDITMolecularGenerator(
         device='cuda:0', batch_size=args.batch_size,
-        task_type=['regression' for _ in range(len(args.props))],
+        task_type=task,
         epochs=args.n_epoch, verbose=True, 
     )
 
@@ -79,4 +93,5 @@ def main():
     model = model.fit(train[0], train[1])
 
     torch.cuda.empty_cache()
-    torch.save(model, f'{args.save_folder}/model_{args.props}.pth')
+    save_name = "model_"+"_".join(p for p in args.props)
+    torch.save(model, f'{args.save_folder}/{save_name}.pth')
