@@ -1,16 +1,19 @@
-num_epochs: 500
-batch_size: 64
-n_folds: 10
-patience: 50
-lr: 0.001
-stop_early: True
-save_path: 'scaled/multi'
+num_epochs: 500 # maximum number of epochs to train a model per fold
+batch_size: 64 # training batch size
+n_folds: 10 # number of folds in the dataset
+patience: 50 # number of epochs to wait before implementing early stopping
+lr: 0.001 # learning rate to use if learning rate tuning is not used
+stop_early: True # if set to False, then trains all the models for entire 500 epochs
+scaling: True # if set to True, then uses RobustScaler() to scale all the property values(useful in multi-property case)
+tuning: True # tunes learning rate per fold if set to True
+save_path: 'scaled/multi' # path to save the models and final predictions of test set
 SEED: 42
-props: ['pCMC', 'AW_ST_CMC', 'Area_min']
-scaling: True
-tuning: True
-in_channels: 39
-edge_dim: 11
+props: ['pCMC', 'AW_ST_CMC', 'Area_min'] # the properties from the .csv file on which to train.
+# below are hyperparameters used in the attentiveFP network. 
+# change in_channls and edge_dim only if you have used different feature set.
+# other parameters can be changed, if you want to train a different size AttentiveFP model
+in_channels: 39 # number of atom features
+edge_dim: 11 # number of bond features
 hidden_channels: 64
 out_channels: 128
 num_layers: 2

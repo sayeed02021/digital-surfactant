@@ -152,14 +152,15 @@ def main():
         )
 
         
-        with open(f"{args.save_path}/config.yaml", "w") as f:
-            yaml.dump(vars(args), f, default_flow_style=False)
+        
 
         
         trainer.fit(model, train_loader, valid_loader)
         model.save_hyperparameters()
         print('USED LEARNING RATE: ', model.hparams.lr)
-        
+        args.lr = model.hparams.lr
+        with open(f"{args.save_path}/config.yaml", "w") as f:
+            yaml.dump(vars(args), f, default_flow_style=False)
         val_metrics = trainer.validate(model, valid_loader, verbose=False)[0]
         test_metrics = trainer.test(model, test_loader, verbose=False)[0]
         loss_data['fold'].append(fold)
