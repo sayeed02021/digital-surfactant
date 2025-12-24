@@ -25,7 +25,7 @@ To train multi-property predictor model used in our work set `props` to `['pCMC'
 python3 main.py --config_file train_configs.yaml
 ``` 
 
-The models are saved inside `{saved_path}/lightning_logs/` where `saved_path` is the path to folder set in `train_configs.yaml` file.
+The models are saved inside `{saved_path}/lightning_logs/` where `saved_path` is the path to folder set in `train_configs.yaml` file. 
 
 
 
