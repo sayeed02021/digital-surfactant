@@ -4,6 +4,7 @@ This repository provides scripts to **fine-tune a Transformer model** and **gene
 
 ---
 
+
 ## 1. Environment Setup
 
 Make sure you have Conda / [Miniconda]((https://www.anaconda.com/docs/getting-started/miniconda/install)) installed.
@@ -19,13 +20,15 @@ conda activate my_env
 ---
 ## 2. Model Training (Pre-training)
 
+**NOTE:** Before running the code, download the CHEMBL matched molecular pairs data from here: [Link](https://drive.google.com/file/d/1_RdbfVLE5_x0yp1Wr7TIUnafaN2eorh6/view?usp=sharing). Move downloaded `.csv` file into `data_chembl/chembl_02` folder.
+
 Execute the following lines to build the vocabulary and split data into train test split
 
 For unconditional pre training go to configuration/config_default.py and set `properties = []`
 
 ```bash
 python preprocess.py \
-  --input-data-path data_chembl/chembl_02/mmp_prop.csv 
+  --input-data-path data_chembl/chembl_02/mmp_prop.csv
 ```
 
 Use the following command to fine-tune a Transformer model using a pretrained checkpoint:
