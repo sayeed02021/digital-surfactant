@@ -1,5 +1,12 @@
 # Instructions for Running Code
 
+Clone into repository: 
+```bash
+git clone https://github.com/sayeed02021/digital-surfactant.git
+
+cd digital-surfactant
+```
+
 ## Diffusion 
 The [diffusion](./diffusion/README.md) folder contains instructions for training the diffusion models described our work and generating new molecules.
 
