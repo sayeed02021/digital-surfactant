@@ -19,7 +19,10 @@ def parse_args():
 
 def main():
     args = parse_args()
-    os.makedirs(args.save_folder, exist_ok=True)
+    if len(args.props)==1:
+        os.makedirs(f'{args.save_folder}/diff_single', exist_ok=True)
+    else:
+        os.makedirs(f'{args.save_folder}/diff_multi', exist_ok=True)
     model = torch.load(args.model_path, weights_only=False)
     df = pd.read_csv(args.df_path)
     test_df = df[df['fold']==-1]
@@ -51,9 +54,9 @@ def main():
 
         data_df = pd.DataFrame(data)
         if len(args.props)==1:
-            data_df.to_csv(f'{args.save_folder}/generated_single_10_mol_per_prop.csv', index=False)
+            data_df.to_csv(f'{args.save_folder}/diff_single/generated_all.csv', index=False)
         else:
-            data_df.to_csv(f'{args.save_folder}/generated_multi_10_mol_per_prop.csv', index=False)
+            data_df.to_csv(f'{args.save_folder}/diff_multi/generated_all.csv', index=False)
 
         torch.cuda.empty_cache()
 
@@ -64,6 +67,7 @@ def main():
             model = torch.load(args.model_path, weights_only=False)
 
 
-
+if __name__=='__main__':
+    main()
 
 

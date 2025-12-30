@@ -93,5 +93,12 @@ def main():
     model = model.fit(train[0], train[1])
 
     torch.cuda.empty_cache()
-    save_name = "model_"+"_".join(p for p in args.props)
+    if len(args.props)==1:
+        save_name = 'model_single'
+        # save_name = "model_"+"_".join(p for p in args.props)
+    else:
+        save_name = 'model_multi'
     torch.save(model, f'{args.save_folder}/{save_name}.pth')
+
+if __name__=='__main__':
+    main()
