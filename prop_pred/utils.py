@@ -3,6 +3,12 @@ import pandas as pd
 import torch
 import torch.nn.functional as F
 from collections import defaultdict
+import yaml
+import glob
+import os
+from model import LitAttentiveFP
+import argparse
+import pytorch_lightning as pl
 
 def ensemble_results(df, props, args):
     # df = pd.read_csv(f'{args.save_path}/all_preds.csv')
@@ -36,6 +42,40 @@ def ensemble_results(df, props, args):
     df = pd.DataFrame(data)
     df.to_csv(f'{args.save_path}/final_results.csv', index = False)
 
+def get_preds(loader, args):
+    
+    trainer = pl.Trainer(
+        accelerator='gpu' if torch.cuda.is_available() else 'cpu',
+        devices=1,
+        logger=None,
+        enable_progress_bar=False
+    )
+    all_data = []
+    model_path = f'{args.model_path}/lightning_logs/version'
+    for fold in range(10):
+        if os.path.exists(f'{model_path}_{fold}'): # check if this fold exists or not
+            model_path_final = glob.glob(f'{model_path}_{fold}/checkpoints/*.ckpt')[-1]
+            config_path = f'{model_path}_{fold}/config.yaml'
+        else:
+            break
+        with open(config_path, 'r') as f:
+            config=yaml.safe_load(f)
+        config_args = argparse.Namespace(**config)
+        model = LitAttentiveFP.load_from_checkpoint(
+            model_path_final, args=config_args
+        )
 
+        results=trainer.predict(model, loader)
+        
+        all_data.append(results[0])
+    
+    final_data = defaultdict(list)
+
+    for result in all_data:
+        for key in result.keys():
+            final_data[key].append(result[key])
+    
+    
+    return final_data
 
 
