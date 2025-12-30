@@ -12,9 +12,18 @@ Make sure you have Conda / [Miniconda]((https://www.anaconda.com/docs/getting-st
 Create the environment from the provided YAML file and activate it:
 
 ```bash
-conda env create -f environment.yml
+conda create -n trfm_opt python=3.7
 
-conda activate my_env
+conda activate trfm_opt
+```
+
+Install required libraries:
+```bash
+pip install -r requirements.txt
+```
+
+```bash
+cd transformer
 ```
 
 ---

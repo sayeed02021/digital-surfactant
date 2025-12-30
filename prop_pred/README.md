@@ -13,6 +13,10 @@ conda activate surfpro
 ```bash
 pip install -r requirements.txt
 ```
+
+```bash
+cd prop_pred
+```
 ---
 ## Training Property Predictor Models
 1. Change the `train_configs.yaml` file with necessary changes. \

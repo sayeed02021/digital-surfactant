@@ -4,14 +4,18 @@
 After setting up [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install) execute the following steps: 
 1. Create new conda environment and activate it:
 ```bash
-conda create -n torch_mol python=3.11
+conda create -n diff python=3.11
 
-conda activate torch_mol
+conda activate diff
 ```
 
 2. Install required libraries:
 ```bash
 pip install -r requirements.txt
+```
+
+```bash
+cd diffusion
 ```
 
 ## Training the Diffusion Models
