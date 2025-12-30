@@ -1,5 +1,7 @@
-# Instructions for Running Code
+# Understanding Generative Model Performance in Property-Guided Surfactant Design: A Comparative Study on Diffusion and Transformer Models
+This repository contains the implementation of our work. 
 
+## Instructions for running the codes in the repository:
 Clone into repository: 
 ```bash
 git clone https://github.com/sayeed02021/digital-surfactant.git
