@@ -4,7 +4,7 @@
 After setting up [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install) execute the following steps: 
 1. Create new conda environment and activate it:
 ```bash
-conda create -n surfpro python=3.11
+conda create -n surfpro python=3.10
 
 conda activate surfpro
 ```
