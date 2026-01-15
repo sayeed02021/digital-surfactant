@@ -11,11 +11,11 @@ import utils.torch_util as ut
 import utils.log as ul
 import utils.plot as up
 from configuration.config_default import DATA_DEFAULT
-import models.dataset as md
-import preprocess.vocabulary as mv
+import models_2.dataset as md
+import preprocess_2.vocabulary as mv
 import configuration.opts as opts
-from models.transformer.module.decode import decode
-from models.transformer.encode_decode.model import EncoderDecoder
+from models_2.transformer.module.decode import decode
+from models_2.transformer.encode_decode.model import EncoderDecoder
 
 
 

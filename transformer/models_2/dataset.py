@@ -10,7 +10,7 @@ import torch.utils.data as tud
 from torch.autograd import Variable
 
 import configuration.config_default as cfgd
-from models.transformer.module.subsequent_mask import subsequent_mask
+from models_2.transformer.module.subsequent_mask import subsequent_mask
 
 class Dataset(tud.Dataset):
     """Custom PyTorch Dataset that takes a file containing
