@@ -1,7 +1,7 @@
 import argparse
 
 import configuration.opts as opts
-from trainer.transformer_trainer import TransformerTrainer
+from trainer_2.transformer_trainer import TransformerTrainer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

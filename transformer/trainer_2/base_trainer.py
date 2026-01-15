@@ -23,7 +23,7 @@ class BaseTrainer(ABC):
     def initialize_dataloader(self, data_path, batch_size, vocab, data_type):
         # Read train or validation
         data = pd.read_csv(os.path.join(data_path, data_type + '.csv'), sep=",")
-        dataset = md.Dataset(data=data, vocabulary=vocab, tokenizer=mv.SMILESTokenizer(), prediction_mode=False,PROPERTIES=self.PROPERTIES )
+        dataset = md.Dataset(data=data, vocabulary=vocab, tokenizer=mv.SMILESTokenizer(), prediction_mode=False)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size,
                                                  shuffle=True, collate_fn=md.Dataset.collate_fn)
         return dataloader

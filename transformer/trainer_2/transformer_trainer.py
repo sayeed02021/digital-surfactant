@@ -21,21 +21,6 @@ class TransformerTrainer(BaseTrainer):
     def __init__(self, opt):
         super().__init__(opt)
 
-        if opt.mode == "unconditional":
-            self.PROPERTIES = []
-
-        elif opt.mode == "single":
-            self.PROPERTIES = ['pCMC']
-
-        elif opt.mode == "multi":
-            self.PROPERTIES = ['pCMC', 'Area_min', 'AW_ST_CMC']
-
-        else:
-            raise ValueError(f"Unknown mode: {opt.mode}")
-
-        print(f"[INFO] Mode: {opt.mode}")
-        print(f"[INFO] Active properties: {self.PROPERTIES}")
-
     def get_model(self, opt, vocab, device):
         vocab_size = len(vocab.tokens())
         if opt.starting_epoch == 1:
