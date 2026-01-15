@@ -8,11 +8,11 @@ import os
 import argparse
 import pickle
 
-import preprocess_2.vocabulary as mv
-import preprocess_2.data_preparation as pdp
+import preprocess.vocabulary as mv
+import preprocess.data_preparation as pdp
 import utils.log as ul
 import utils.file as uf
-import preprocess_2.property_change_encoder as pce
+import preprocess.property_change_encoder as pce
 
 global LOG
 LOG = ul.get_logger("preprocess", "experiments/preprocess.log")
