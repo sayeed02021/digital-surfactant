@@ -10,13 +10,24 @@ import utils.chem as uc
 import utils.torch_util as ut
 import utils.log as ul
 import utils.plot as up
-import configuration.config_default as cfgd
+from configuration.config_default import DATA_DEFAULT
 import models.dataset as md
 import preprocess.vocabulary as mv
 import configuration.opts as opts
 from models.transformer.module.decode import decode
 from models.transformer.encode_decode.model import EncoderDecoder
 
+
+
+def get_properties(mode):
+    if mode == "unconditional":
+        return []
+    elif mode == "single":
+        return ['pCMC']
+    elif mode == "multi":
+        return ['pCMC', 'Area_min', 'AW_ST_CMC']
+    else:
+        raise ValueError(f"Unknown mode: {mode}")
 
 class GenerateRunner():
 
@@ -28,6 +39,9 @@ class GenerateRunner():
         LOG = ul.get_logger(name="generate",
                             log_path=os.path.join(self.save_path, 'generate.log'))
         LOG.info(opt)
+        self.PROPERTIES = get_properties(opt.mode)
+        LOG.info(f"Generation mode: {opt.mode}")
+        LOG.info(f"Active properties: {self.PROPERTIES}")
         LOG.info("Save directory: {}".format(self.save_path))
 
         # Load vocabulary
@@ -47,7 +61,7 @@ class GenerateRunner():
 
         # Read test
         data = pd.read_csv(os.path.join(opt.data_path, test_file + '.csv'), sep=",")
-        dataset = md.Dataset(data=data, vocabulary=vocab, tokenizer=self.tokenizer, prediction_mode=True)
+        dataset = md.Dataset(data=data, vocabulary=vocab, tokenizer=self.tokenizer,PROPERTIES=self.PROPERTIES        , prediction_mode=True)
         dataloader = torch.utils.data.DataLoader(dataset, opt.batch_size,
                                                  shuffle=False, collate_fn=md.Dataset.collate_fn)
         return dataloader
@@ -65,7 +79,7 @@ class GenerateRunner():
         model = EncoderDecoder.load_from_file(file_name)
         model.to(device)
         model.eval()
-        max_len = cfgd.DATA_DEFAULT['max_sequence_length']
+        max_len = DATA_DEFAULT['max_sequence_length']
         df_list = []
         sampled_smiles_list = []
         for j, batch in enumerate(ul.progress_bar(dataloader_test, total=len(dataloader_test))):
@@ -102,7 +116,7 @@ class GenerateRunner():
         data_sorted.to_csv(result_path, index=False)
 
     def sample(self, model, src, src_mask, source_length, decode_type, num_samples=10,
-               max_len=cfgd.DATA_DEFAULT['max_sequence_length'],
+               max_len=DATA_DEFAULT['max_sequence_length'],
                device=None):
         batch_size = src.shape[0]
         num_valid_batch = np.zeros(batch_size)  # current number of unique and valid samples out of total sampled
@@ -123,7 +137,7 @@ class GenerateRunner():
 
         # Set of unique starting molecules
         if src is not None:
-            start_ind = len(cfgd.PROPERTIES)
+            start_ind = len(self.PROPERTIES)
             for ibatch in range(batch_size):
                 source_smi = self.tokenizer.untokenize(self.vocab.decode(src[ibatch].tolist()[start_ind:]))
                 source_smi = uc.get_canonical_smile(source_smi)
