@@ -33,11 +33,12 @@ cd transformer
 
 Execute the following lines to build the vocabulary and split data into train test split
 
-For unconditional pre training go to configuration/config_default.py and set `properties = []`
+
 
 ```bash
 python preprocess.py \
-  --input-data-path data_chembl/chembl_02/mmp_prop.csv
+  --input-data-path data_chembl/chembl_02/mmp_prop.csv\
+  --mode unconditional
 ```
 
 Use the following command to fine-tune a Transformer model using a pretrained checkpoint:
@@ -48,7 +49,8 @@ python train.py \
   --data-path data_chembl/chembl_02/ \
   --save-directory pretrain_transformer \
   --batch-size 128 \
-  --num-epoch 200 
+  --num-epoch 200 \
+  --mode unconditional
 ```
 
 -----
@@ -59,12 +61,12 @@ python train.py \
 
 Execute the following lines to fine-tune a Transformer model using a pretrained checkpoint:
 
-1. For single property go to `configuration/config_default.py` and select the `properties = ['pCMC']`
 
-2. Execute the following lines
+1. Execute the following lines
 ```bash
 python preprocess.py \
-  --input-data-path data_single/final_mmps_single.csv 
+  --input-data-path data_single/final_mmps_single.csv \
+  --mode single
 ```
 ```bash
 python train.py \
@@ -73,7 +75,8 @@ python train.py \
   --data-path data_single \
   --save-directory fine_tune_transformer_single\
   --batch-size 128 \
-  --num-epoch 300
+  --num-epoch 300 \
+  --mode single
 ```
 
 **Key Arguments**
@@ -84,6 +87,8 @@ python train.py \
 * `--save-directory` : Directory where checkpoints and logs are saved
 * `--batch-size` : Training batch size
 * `--num-epoch` : Number of training epochs
+* `--mode` : properties conditions to be considered for training for Single property we     trained on pCMC 
+
 
 
 Checkpoints are saved under: `experiments/fine_tune_transformer_single/checkpoint/`
@@ -94,11 +99,12 @@ Checkpoints are saved under: `experiments/fine_tune_transformer_single/checkpoin
 
 Use the following command to fine-tune a Transformer model using a pretrained checkpoint:
 
-1. For multi property go to configuration/config_default.py and select the `properties = ['pCMC','Area_min','ST_AW_CMC']`
-2. Execute following lines:
+
+1. Execute following lines:
 ```bash
 python preprocess.py \
-  --input-data-path data_multi/final_mmps_multi.csv 
+  --input-data-path data_multi/final_mmps_multi.csv \
+  --mode multi 
 ```
 ```bash
 python train.py \
@@ -107,7 +113,8 @@ python train.py \
   --data-path data_multi \
   --save-directory fine_tune_transformer_multi\
   --batch-size 128 \
-  --num-epoch 300
+  --num-epoch 300 \
+  --mode multi
   
 ```
 
@@ -119,6 +126,7 @@ python train.py \
 * `--save-directory` : Directory where checkpoints and logs are saved ; check `eperiments/fine_tune_transformer_multi`
 * `--batch-size` : Training batch size
 * `--num-epoch` : Number of training epochs
+* `--mode` : properties conditions to be considered for training for multi property we trained on pCMC , AW_ST_CMC, Area_min
 
 
 Checkpoints are saved under: `experiments/fine_tune_transformer_multi/checkpoint/`
@@ -129,15 +137,16 @@ Checkpoints are saved under: `experiments/fine_tune_transformer_multi/checkpoint
 
 After training, generate predictions on the test sets
 
-1. For single property go to `configuration/config_default.py` and select `properties = ['pCMC']` or for multi property select `properties = ['pCMC','Area_min','ST_AW_CMC']`
-2. Below is an example of generating using multi property model:
+
+1. Below is an example of generating using multi property model:
 ```bash
 python generate.py \
   --data-path data_multi/ \
   --test-file-name test \
   --model-path experiments/fine_tune_transformer_multi/checkpoint \
   --save-directory evaluation_transformer_multi \
-  --epoch 100
+  --epoch 100 \
+  --mode multi
 ```
 
 **Key Arguments**
@@ -146,3 +155,4 @@ python generate.py \
 * `--model-path` : Path to trained model checkpoints
 * `--save-directory` : Directory where generated outputs are stored
 * `--epoch 100` : Epoch number of the checkpoint to load
+* `--mode` : properties conditions to be considered for training for multi property we trained on pCMC , AW_ST_CMC, Area_min
