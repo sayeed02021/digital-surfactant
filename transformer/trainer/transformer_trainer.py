@@ -7,13 +7,13 @@ import configuration.config_default as cfgd
 import utils.log as ul
 import utils.file as uf
 import utils.torch_util as ut
-import preprocess_2.vocabulary as mv
-from models_2.transformer.encode_decode.model import EncoderDecoder
-from models_2.transformer.module.noam_opt import NoamOpt as moptim
-from models_2.transformer.module.decode import decode
-from trainer_2.base_trainer import BaseTrainer
-from models_2.transformer.module.label_smoothing import LabelSmoothing
-from models_2.transformer.module.simpleloss_compute import SimpleLossCompute
+import preprocess.vocabulary as mv
+from models.transformer.encode_decode.model import EncoderDecoder
+from models.transformer.module.noam_opt import NoamOpt as moptim
+from models.transformer.module.decode import decode
+from trainer.base_trainer import BaseTrainer
+from models.transformer.module.label_smoothing import LabelSmoothing
+from models.transformer.module.simpleloss_compute import SimpleLossCompute
 import matplotlib.pyplot as plt 
 
 class TransformerTrainer(BaseTrainer):

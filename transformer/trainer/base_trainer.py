@@ -6,8 +6,8 @@ import torch
 from tensorboardX import SummaryWriter
 
 import utils.log as ul
-import models_2.dataset as md
-import preprocess_2.vocabulary as mv
+import models.dataset as md
+import preprocess.vocabulary as mv
 
 
 class BaseTrainer(ABC):
