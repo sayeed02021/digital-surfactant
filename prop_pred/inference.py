@@ -8,6 +8,7 @@ import argparse
 from dataset import SMILESDataset
 from utils import get_preds
 
+import os
 import logging
 import warnings
 warnings.filterwarnings("ignore")
@@ -214,6 +215,7 @@ def main(args):
 
 if __name__=='__main__':
     args = parse_args()
+    os.makedirs(args.save_path, exist_ok=True)
     main(args)
 
 

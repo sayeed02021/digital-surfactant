@@ -46,6 +46,8 @@ def main():
     # seed_everything()
     
     args = parse_args()
+    if len(args.props)==1:
+        args.scaling=False
     props = args.props
     # print(args.save_path)
     seed_everything(seed=args.SEED, workers=True)
