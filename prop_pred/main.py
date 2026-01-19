@@ -161,7 +161,7 @@ def main():
         model.save_hyperparameters()
         print('USED LEARNING RATE: ', model.hparams.lr)
         args.lr = model.hparams.lr
-        with open(f"{args.save_path}/config.yaml", "w") as f:
+        with open(f"{args.save_path}/lightning_logs/version_{fold}/config.yaml", "w") as f:
             yaml.dump(vars(args), f, default_flow_style=False)
         val_metrics = trainer.validate(model, valid_loader, verbose=False)[0]
         test_metrics = trainer.test(model, test_loader, verbose=False)[0]
