@@ -67,9 +67,31 @@ python3 inference.py \
 **Key Arguments**
 * `--props`: Enter the property values that you are predicting. For single-case enter `pCMC` while for multi-case enter `pCMC AW_ST_CMC Area_min`
 * `--model_path`: The path to folder that contains the `lightning_logs/` folder. The property predictor models are inside `--model_path/lightning_logs/`. **Don't** include `lightning_logs` into this path.
-*`--save_path`: Path to folder where you will be storing your predicted output `.csv` files.
+* `--save_path`: Path to folder where you will be storing your predicted output `.csv` files.
 * `--method`: Should be either `trfm` or `diff`. If the molecules have been generated using diffusion models choose `diff`, if generated using transformers choose `trfm`.
 * `--trained_data_path`: Path to the training dataset that the property predictor models were trained on. Needed for fitting the property value scaler for multi-property case
+
+
+
+# Computing metrics
+To compute the metrics for generated models, first install [Molecular Sets](https://github.com/molecularsets/moses) library inside your current environment, either through pip or manually as show in their README file.
+
+Run the `metrics.py` file. An example use is shown below: 
+```bash
+python3 metrics.py \
+--method trfm
+--pred_folder ../generated_data_trfm_single \ 
+--props pCMC \
+--train_path ../data/surfpro_train.csv \
+--mol_type non-ionic
+```
+**Key Arguments**
+* `--props`: Enter the property values that you are predicting. For single-case enter `pCMC` while for multi-case enter `pCMC AW_ST_CMC Area_min`
+* `--method`: Should be either `trfm` or `diff`. If the molecules have been generated using diffusion models choose `diff`, if generated using transformers choose `trfm`.
+* `--train_path`: Path to the training dataset that the property generative models were trained on(hard coded for surfpro_train.csv). 
+* `mol_type`: Type of molecules(ionic/non-ionic) molecules that are being generated
+* `--pred_folder`: Path to folder that contains the .csv files with generated molecules and their predictions
+
 
 
 ## Acknowledgements
