@@ -26,7 +26,7 @@ def atom_features(atom, explicit_H=False, use_chirality=True):
             "B", "C", "N", "O", "F", "Si", "P", "S", "Cl",
             "As", "Se", "Br", "Te", "I", "At", "other"
         ])
-        + one_of_k_encoding(atom.GetDegree(), [0, 1, 2, 3, 4, 5])
+        + one_of_k_encoding_unk(atom.GetDegree(), [0, 1, 2, 3, 4, 5])
         + [atom.GetFormalCharge(), atom.GetNumRadicalElectrons()]
         + one_of_k_encoding_unk(atom.GetHybridization(), [
             Chem.rdchem.HybridizationType.SP,
