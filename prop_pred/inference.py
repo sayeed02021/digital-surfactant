@@ -61,13 +61,13 @@ def infer_one_file_trfm(df, fold_idx, args, scaler=None):
         scale_data=scale_data,
         source_data=source_data
     )
+    # print("Data Length: ", len(dataset))
     loader = DataLoader(dataset, batch_size=64, shuffle=False)
-    pred_dict = get_preds(loader, args)
-
+    pred_dict = get_preds(loader, args) # dictonary having different model outputs in list format
     preds = pred_dict['preds']
     preds_unscaled = []
     for p in preds:
-        p = p.numpy()
+        # p = p.numpy()
         if scaler is not None:
             p_unscaled = scaler.inverse_transform(p)
             preds_unscaled.append(p_unscaled)
@@ -78,8 +78,10 @@ def infer_one_file_trfm(df, fold_idx, args, scaler=None):
     final_preds = {}
     preds = pred_dict['preds']
     target_prop = np.array(pred_dict['target_prop'][0])
+    # print(target_prop.shape)
     source_prop = np.array(pred_dict['source_prop'][0])
     preds = np.array(preds)
+    # print(preds.shape[0])
     ensemble_preds = preds.mean(axis=0)
     for idx, prop in enumerate(args.props):
         final_preds[f'pred_{prop}'] = ensemble_preds[:,idx].tolist()
@@ -132,7 +134,7 @@ def infer_one_file_diff(df, fold_idx, args, scaler=None):
     preds = pred_dict['preds']
     preds_unscaled = []
     for p in preds:
-        p = p.numpy()
+        # p = p.numpy()
         if scaler is not None:
             p_unscaled = scaler.inverse_transform(p)
             preds_unscaled.append(p_unscaled)
@@ -144,7 +146,9 @@ def infer_one_file_diff(df, fold_idx, args, scaler=None):
     final_preds = {}
     preds = pred_dict['preds']
     target_prop = np.array(pred_dict['target_prop'][0])
+
     preds = np.array(preds)
+
     ensemble_preds = preds.mean(axis=0)
     for idx, prop in enumerate(args.props):
         final_preds[f'pred_{prop}'] = ensemble_preds[:,idx].tolist()
@@ -212,6 +216,7 @@ def main(args):
                 args=args,
                 scaler = scaler
             )
+
 
 if __name__=='__main__':
     args = parse_args()

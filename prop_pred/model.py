@@ -4,6 +4,7 @@ import torch_geometric.nn as nng
 import torch.nn.functional as F
 import torch.optim as optim
 import pytorch_lightning as pl
+import numpy as np
 class RegressionHead(nn.Module):
     def __init__(self, n_prop, dim):
         super().__init__()
@@ -127,11 +128,11 @@ class LitAttentiveFP(pl.LightningModule):
         # if smi_act[0]=='No_Smile': ## used when training
         if batch.source_data_exists[0]: ## target smiles and some other meta data exist
             results = {
-                "index": batch['index'],
-                "smiles": smiles, 
-                "preds": preds,
-                "targets": targets,
-                "mask": mask
+                "index": batch['index'].numpy(),
+                "smiles": np.array(smiles), 
+                "preds": preds.numpy(),
+                "targets": targets.numpy(),
+                "mask": mask.numpy()
             }
             for key in batch.source_data_keys[0]:
                 results[key] = batch[key]
@@ -140,11 +141,11 @@ class LitAttentiveFP(pl.LightningModule):
 
         else:
             return {
-                "index": batch.index,
-                "smiles": smiles,
-                "targets": targets,
-                "preds": preds,
-                "mask": mask
+                "index": batch['index'].numpy(),
+                "smiles": np.array(smiles),
+                "targets": targets.numpy(),
+                "preds": preds.numpy(),
+                "mask": mask.numpy()
             }
             
 				
@@ -172,7 +173,6 @@ class LitAttentiveFP(pl.LightningModule):
                 metrics[f'{prefix}_{prop}_rmse'] = torch.sqrt(self.mse(targets[:,i][prop_mask], preds[:,i][prop_mask]))
 
         else:
-            # print('Hello')
             metrics[f'{prefix}_{self.props[0]}_mae'] = metrics[f'{prefix}_mae']
             metrics[f'{prefix}_{self.props[0]}_rmse'] = metrics[f'{prefix}_rmse']
 

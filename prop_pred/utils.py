@@ -43,7 +43,7 @@ def ensemble_results(df, props, args):
     df.to_csv(f'{args.save_path}/final_results.csv', index = False)
 
 def get_preds(loader, args):
-    
+    # print("Length Loader: ", len(loader))
     trainer = pl.Trainer(
         accelerator='gpu' if torch.cuda.is_available() else 'cpu',
         devices=1,
@@ -65,17 +65,31 @@ def get_preds(loader, args):
             model_path_final, args=config_args
         )
 
-        results=trainer.predict(model, loader)
-        
-        all_data.append(results[0])
-    
+        results=trainer.predict(model, loader) # list of length = batch_size
+        ## flatten the list
+        out = {}
+        for k in results[0].keys():
+            values = [d[k] for d in results]
+
+            if isinstance(values[0], torch.Tensor):
+                out[k] = torch.cat(values, dim=0)
+            elif isinstance(values[0], np.ndarray):
+                out[k] = np.concatenate(values, axis=0)
+            elif isinstance(values[0], list):
+                out[k] = sum(values, [])
+            else:
+                out[k] = values
+        # print("Output length: ", len(out['preds']))   
+        all_data.append(out) # list of dictionaries containing predictions of different models
+    # print(len(all_data[0]['preds']))
     final_data = defaultdict(list)
 
     for result in all_data:
         for key in result.keys():
             final_data[key].append(result[key])
     
-    
+    # print(final_data['index'])
+
     return final_data
 
 
